@@ -39,7 +39,8 @@ const Main = (props) => {
         <FlatList
         keyExtractor={(_, index) => index.toString()}
         data={cityList}
-        renderItem={({item}) => <Text> {item} </Text>}
+        renderItem={({item}) => <City cityName={item}/>}
+        horizontal
         />
         </View>
       </View>
