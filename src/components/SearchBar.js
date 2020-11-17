@@ -8,8 +8,9 @@ const SearchBar = (props) => {
     <View style={searchbarStyle.container} >
       <Icon name="magnify" size={20} color="gray"/>
       <TextInput
-      style={searchbarStyle.input}
+        style={searchbarStyle.input}
         placeholder="Search a city"
+        onChangeText={(value) => props.onSearch(value)}
       />
     </View>
   );
