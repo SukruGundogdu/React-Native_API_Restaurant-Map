@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import Axios from "axios";
 import {SafeAreaView, View, FlatList, Text} from 'react-native';
 
@@ -9,6 +9,7 @@ let orginalList = [];
 
 const Main = (props) => {
   const [cityList, setCityList] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
 
 
   const fetchCities = async () => {
@@ -33,26 +34,45 @@ const Main = (props) => {
     setCityList(filteredList);
   }
 
+  conCitySelect = async (city) => {
+    const {data: {restaurants} } = await Axios.get("http://opentable.herokuapp.com/api/restaurants?city=" + city)
+    setRestaurants(restaurants)
+    console.log(restaurants)
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
 
       <View style={{flex: 1}}>
         <MapView
         style={{flex:1}}
-      initialRegion={{
+        initialRegion={{
         latitude: 37.78825,
         longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
+      }}>
+          {restaurants.map((r, index) => (
+    <Marker
+      key={index}
+      coordinate={{
+        latitude: r.lat,
+        longitude: r.lng,
       }}
+      title={r.title}
+      description={r.description}
     />
+  ))}
+      </MapView>
+    
         <View style={{position: "absolute"}}>
         <SearchBar onSearch={onCitySearch} />
         <FlatList
         keyExtractor={(_, index) => index.toString()}
         data={cityList}
-        renderItem={({item}) => <City cityName={item}/>}
+        renderItem={({item}) => <City cityName={item} onSelect={() => conCitySelect(item)}/>}
         horizontal
+        showsHorizontalScrollIndicator={false}
         />
         </View>
       </View>
