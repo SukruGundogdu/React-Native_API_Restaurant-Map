@@ -4,12 +4,15 @@ import Axios from "axios";
 import {SafeAreaView, View, FlatList, Text} from 'react-native';
 
 import {City, RestaurantDetail, SearchBar} from './components';
+import { mapStyle } from "./styles"
 
 let orginalList = [];
 
 const Main = (props) => {
   const [cityList, setCityList] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
+  const [modalFlag, setModalFlag] = useState(false);
+  const [selectedRestaurant, setSelectedRestaurant] = useState("");
   const mapRef = useRef(null)
 
 
@@ -58,11 +61,17 @@ const Main = (props) => {
     console.log(restaurants)
   }
 
+  const onRestaurantSelect = (restaurant) => {
+    setSelectedRestaurant(restaurant)
+    setModalFlag(true)
+  }
+
   return (
     <SafeAreaView style={{flex: 1}}>
 
       <View style={{flex: 1}}>
         <MapView
+          customMapStyle={mapStyle}
           ref={mapRef}
           style={{flex:1}}
           initialRegion={{
@@ -78,10 +87,10 @@ const Main = (props) => {
         latitude: r.lat,
         longitude: r.lng,
       }}
+      onPress={() => onRestaurantSelect(r)}
     />
   ))}
       </MapView>
-    
         <View style={{position: "absolute"}}>
         <SearchBar onSearch={onCitySearch} />
         <FlatList
@@ -93,6 +102,13 @@ const Main = (props) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         />
+
+          <RestaurantDetail
+            isVisible={modalFlag}
+            restaurant={selectedRestaurant}
+            onClose={() => setModalFlag(false)}
+          />
+
         </View>
       </View>
     </SafeAreaView>
