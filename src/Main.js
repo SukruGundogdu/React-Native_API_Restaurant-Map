@@ -46,7 +46,7 @@ const Main = (props) => {
       });
     });
 
-    mapRef.current.fitToCoordinates(restaurantsCoordinates, {
+    mapRef.current.fitToCoordinates(restaurantsCoordinates,{
       edgePadding: {
         top: 50,
         right: 25,
